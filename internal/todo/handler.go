@@ -21,19 +21,12 @@ func NewHandler(repo Repository, db *pgxpool.Pool) *Handler {
 
 func (h *Handler) Create(c *fiber.Ctx) error {
 	var req sqlc.CreateTodoParams
-
-	ctx := c.Context()
-
 	if err := c.BodyParser(&req); err != nil {
 		return err
 	}
 
-	arg := sqlc.CreateTodoParams{
-		Todo:        req.Todo,
-		Description: req.Description,
-	}
-
-	todo, err := h.repo.CreateTodo(ctx, arg)
+	ctx := c.Context()
+	todo, err := h.repo.CreateTodo(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -47,7 +40,6 @@ func (h *Handler) Create(c *fiber.Ctx) error {
 
 func (h *Handler) GetAllTodos(c *fiber.Ctx) error {
 	ctx :=  c.Context()
-
 	todos, err := h.repo.ListTodos(ctx)
 	if err != nil {
 		return err
@@ -61,16 +53,14 @@ func (h *Handler) GetAllTodos(c *fiber.Ctx) error {
 }
 
 func (h *Handler) GetTodo(c *fiber.Ctx) error {
-	numID, err := strconv.ParseInt(c.Params("id"), 10, 32)
+	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return err
 	}
-
-	id := int32(numID)
 	
 	ctx := c.Context()
 
-	todo, err := h.repo.GetTodo(ctx, id)
+	todo, err := h.repo.GetTodo(ctx, int32(id))
 	if err != nil {
 		return err
 	}
@@ -83,28 +73,20 @@ func (h *Handler) GetTodo(c *fiber.Ctx) error {
 }
 
 func (h *Handler) UpdateTodo(c *fiber.Ctx) error {
-	var req sqlc.UpdateTodoParams
-
-	numID, err := strconv.ParseInt(c.Params("id"), 10, 32)
+	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return err
 	}
 	
-	id := int32(numID)
-
-	ctx := c.Context()
-
+	var req sqlc.UpdateTodoParams
 	if err := c.BodyParser(&req); err != nil {
 		return err
 	}
 
-	arg := sqlc.UpdateTodoParams{
-		ID: id,
-		Todo: req.Todo,
-		Description: req.Description,
-	}
+	ctx := c.Context()
 
-	todo, err := h.repo.UpdateTodo(ctx, arg)
+	req.ID = int32(id)
+	todo, err := h.repo.UpdateTodo(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -117,16 +99,14 @@ func (h *Handler) UpdateTodo(c *fiber.Ctx) error {
 }
 
 func (h *Handler) DeleteTodo(c *fiber.Ctx) error {
-	numID, err := strconv.ParseInt(c.Params("id"), 10, 32)
+	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return err
 	}
 
-	id := int32(numID)
-
 	ctx := c.Context()
 
-	err = h.repo.DeleteTodo(ctx, id)
+	err = h.repo.DeleteTodo(ctx, int32(id))
 	if err != nil {
 		return err
 	}
