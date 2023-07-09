@@ -18,7 +18,6 @@ func buildServer() error {
 	}
 
 	db, err := database.Connect(context.Background(), env.DBurl)
-
 	if err != nil {
 		return err
 	}

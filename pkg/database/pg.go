@@ -10,7 +10,6 @@ import (
 
 func Connect(ctx context.Context, db_url string) (*pgxpool.Pool, error) {
 	db, err := pgxpool.New(ctx, db_url)
-
 	if err != nil {
 		return nil, err
 	}
