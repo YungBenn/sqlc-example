@@ -34,7 +34,6 @@ func (h *Handler) Create(c *fiber.Ctx) error {
 	}
 
 	todo, err := h.repo.CreateTodo(ctx, arg)
-
 	if err != nil {
 		return err
 	}
@@ -50,7 +49,6 @@ func (h *Handler) GetAllTodos(c *fiber.Ctx) error {
 	ctx :=  c.Context()
 
 	todos, err := h.repo.ListTodos(ctx)
-
 	if err != nil {
 		return err
 	}
@@ -91,7 +89,7 @@ func (h *Handler) UpdateTodo(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-
+	
 	id := int32(numID)
 
 	ctx := c.Context()
