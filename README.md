@@ -1,2 +1,2 @@
 # sqlc-example
-Learn how to make restapi with sqlc
+Simple Todo restapi with sqlc
